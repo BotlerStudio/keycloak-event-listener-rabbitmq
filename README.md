@@ -1,6 +1,6 @@
 # keycloak-event-listener-rabbitmq
 
-##### A Keycloak SPI plugin that publishes events to a RabbitMq server.  
+##### A Keycloak SPI plugin that publishes events to a RabbitMq server.
 
 | Plugin | min Keycloak ver |
 | -- | ---- |
@@ -10,10 +10,9 @@
 
 For example here is the notification of the user updated by administrator
 
-* routing key: `KK.EVENT.ADMIN.MYREALM.SUCCESS.USER.UPDATE`  
+* routing key: `KK.EVENT.ADMIN.MYREALM.SUCCESS.USER.UPDATE`
 * published to exchange: `amq.topic`
-* content: 
-
+* content:
 
 ```
 {
@@ -36,56 +35,71 @@ For example here is the notification of the user updated by administrator
 ```
 
 The routing key is calculated as follows:
+
 * admin events: `KK.EVENT.ADMIN.<REALM>.<RESULT>.<RESOURCE_TYPE>.<OPERATION>`
 * client events: `KK.EVENT.CLIENT.<REALM>.<RESULT>.<CLIENT>.<EVENT_TYPE>`
 
 And because the recommended exchange is a **TOPIC (amq.topic)**,  
 therefore its easy for Rabbit client to subscribe to selective combinations eg:
+
 * all events: `KK.EVENT.#`
 * all events from my realm: `KK.EVENT.*.MYREALM.#`
 * all error events from my realm: `KK.EVENT.*.MYREALM.ERROR.#`
 * all user events from my-relam and my-client: `KK.EVENT.*.MY-REALM.*.MY-CLIENT.USER`
 
-
 ## USAGE:
-1. [Download the latest jar](https://github.com/aznamier/keycloak-event-listener-rabbitmq/blob/target/keycloak-to-rabbit-3.0.jar?raw=true) or build from source: ``mvn clean install``
-2. copy jar into your Keycloak `/opt/jboss/keycloak/standalone/deployments/keycloak-to-rabbit-3.0.jar`
+
+1. [Download the latest jar](https://github.com/aznamier/keycloak-event-listener-rabbitmq/blob/target/keycloak-to-rabbit-3.0.jar?raw=true)
+   or build from source: ``mvn clean install``
+2. copy jar into your Keycloak `/opt/keycloak/providers/` or `/opt/jboss/keycloak/standalone/deployments/`
 3. Configure as described below (option 1 or 2 or 3)
 4. Restart the Keycloak server
 5. Enable logging in Keycloak UI by adding **keycloak-to-rabbitmq**  
- `Manage > Events > Config > Events Config > Event Listeners`
+   `Manage > Events > Config > Events Config > Event Listeners`
 
-#### Configuration 
+#### Configuration
+
 ###### OPTION 1: just configure **ENVIRONMENT VARIABLES**
-  - `KK_TO_RMQ_URL` - default: *localhost*
-  - `KK_TO_RMQ_PORT` - default: *5672*
-  - `KK_TO_RMQ_VHOST` - default: *empty*
-  - `KK_TO_RMQ_EXCHANGE` - default: *amq.topic*
-  - `KK_TO_RMQ_USERNAME` - default: *guest*
-  - `KK_TO_RMQ_PASSWORD` - default: *guest*
-  - `KK_TO_RMQ_USE_TLS` - default: *false*
+
+- `KK_TO_RMQ_URL` - default: *localhost*
+- `KK_TO_RMQ_PORT` - default: *5672*
+- `KK_TO_RMQ_VHOST` - default: */*
+- `KK_TO_RMQ_EXCHANGE` - default: *amq.topic*
+- `KK_TO_RMQ_USERNAME` - default: *guest*
+- `KK_TO_RMQ_PASSWORD` - default: *guest*
+- `KK_TO_RMQ_USE_TLS` - default: *false*
+- `KK_TO_RMQ_QNAME` - default: *kk*
+- `KK_TO_RMQ_ALLOWED_ADMIN_EVENTS` - default: *EMPTY* - *Comma-separated*
+- `KK_TO_RMQ_IGNORED_ADMIN_EVENTS` - default: *EMPTY* - *Comma-separated*
+- `KK_TO_RMQ_ALLOWED_CLIENT_EVENTS` - default: *EMPTY* - *Comma-separated*
+- `KK_TO_RMQ_IGNORED_CLIENT_EVENTS` - default: *EMPTY* - *Comma-separated*
 
 ###### OPTION 2: edit Keycloak subsystem of WildFly standalone.xml or standalone-ha.xml:
 
 ```xml
+
 <spi name="eventsListener">
     <provider name="keycloak-to-rabbitmq" enabled="true">
         <properties>
             <property name="url" value="${env.KK_TO_RMQ_URL:localhost}"/>
             <property name="port" value="${env.KK_TO_RMQ_PORT:5672}"/>
-            <property name="vhost" value="${env.KK_TO_RMQ_VHOST:}"/>
+            <property name="vhost" value="${env.KK_TO_RMQ_VHOST:/}"/>
             <property name="exchange" value="${env.KK_TO_RMQ_EXCHANGE:amq.topic}"/>
             <property name="use_tls" value="${env.KK_TO_RMQ_USE_TLS:false}"/>
-            
             <property name="username" value="${env.KK_TO_RMQ_USERNAME:guest}"/>
             <property name="password" value="${env.KK_TO_RMQ_PASSWORD:guest}"/>
+            <property name="qname" value="${env.KK_TO_RMQ_PASSWORD:guest}"/>
+            <property name="allowed_admin_events" value="${env.KK_TO_RMQ_ALLOWED_ADMIN_EVENTS:}"/>
+            <property name="ignored_admin_events" value="${env.KK_TO_RMQ_IGNORED_ADMIN_EVENTS:}"/>
+            <property name="allowed_client_events" value="${env.KK_TO_RMQ_ALLOWED_CLIENT_EVENTS:}"/>
+            <property name="ignored_client_events" value="${env.KK_TO_RMQ_IGNORED_CLIENT_EVENTS:}"/>
         </properties>
     </provider>
 </spi>
 ```
-###### OPTION 3: same effect as OPTION 2 but programatically:
+
+###### OPTION 3: same effect as OPTION 2 but programmatically:
+
 ```
 echo "yes" | $KEYCLOAK_HOME/bin/jboss-cli.sh --file=$KEYCLOAK_HOME/KEYCLOAK_TO_RABBIT.cli
 ```
-
-

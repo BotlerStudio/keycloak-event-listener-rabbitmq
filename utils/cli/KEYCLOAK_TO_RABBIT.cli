@@ -7,10 +7,15 @@ batch
 /subsystem=keycloak-server/spi=eventsListener/provider=keycloak-to-rabbitmq/:map-put(name=properties,key=url,value="${env.KK_TO_RMQ_URL:localhost}")
 /subsystem=keycloak-server/spi=eventsListener/provider=keycloak-to-rabbitmq/:map-put(name=properties,key=username,value="${env.KK_TO_RMQ_USERNAME:guest}")
 /subsystem=keycloak-server/spi=eventsListener/provider=keycloak-to-rabbitmq/:map-put(name=properties,key=password,value="${env.KK_TO_RMQ_PASSWORD:guest}")
-/subsystem=keycloak-server/spi=eventsListener/provider=keycloak-to-rabbitmq/:map-put(name=properties,key=vhost,value="${env.KK_TO_RMQ_VHOST:}")
+/subsystem=keycloak-server/spi=eventsListener/provider=keycloak-to-rabbitmq/:map-put(name=properties,key=vhost,value="${env.KK_TO_RMQ_VHOST:/}")
 /subsystem=keycloak-server/spi=eventsListener/provider=keycloak-to-rabbitmq/:map-put(name=properties,key=port,value=${env.KK_TO_RMQ_PORT:5672})
 /subsystem=keycloak-server/spi=eventsListener/provider=keycloak-to-rabbitmq/:map-put(name=properties,key=exchange,value="${env.KK_TO_RMQ_EXCHANGE:amq.topic}")
+/subsystem=keycloak-server/spi=eventsListener/provider=keycloak-to-rabbitmq/:map-put(name=properties,key=qname,value="${env.KK_TO_RMQ_QNAME:kk}")
 /subsystem=keycloak-server/spi=eventsListener/provider=keycloak-to-rabbitmq/:map-put(name=properties,key=use_tls,value="${env.KK_TO_RMQ_USE_TLS:false}")
+/subsystem=keycloak-server/spi=eventsListener/provider=keycloak-to-rabbitmq/:map-put(name=properties,key=allowed_admin_events,value="${env.KK_TO_RMQ_ALLOWED_ADMIN_EVENTS:}")
+/subsystem=keycloak-server/spi=eventsListener/provider=keycloak-to-rabbitmq/:map-put(name=properties,key=ignored_admin_events,value="${env.KK_TO_RMQ_IGNORED_ADMIN_EVENTS:}")
+/subsystem=keycloak-server/spi=eventsListener/provider=keycloak-to-rabbitmq/:map-put(name=properties,key=allowed_client_events,value="${env.KK_TO_RMQ_ALLOWED_CLIENT_EVENTS:}")
+/subsystem=keycloak-server/spi=eventsListener/provider=keycloak-to-rabbitmq/:map-put(name=properties,key=ignored_client_events,value="${env.KK_TO_RMQ_IGNORED_CLIENT_EVENTS:}")
 
 
 run-batch

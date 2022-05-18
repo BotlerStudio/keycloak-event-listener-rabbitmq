@@ -8,31 +8,31 @@ import org.keycloak.models.KeycloakSessionFactory;
 
 public class RabbitMqEventListenerProviderFactory implements EventListenerProviderFactory {
 
-	private RabbitMqConfig cfg;
+    private RabbitMqConfig cfg;
 
-	@Override
-	public EventListenerProvider create(KeycloakSession session) {
-		return new RabbitMqEventListenerProvider(cfg, session);
-	}
+    @Override
+    public EventListenerProvider create(KeycloakSession session) {
+        return new RabbitMqEventListenerProvider(cfg, session);
+    }
 
-	@Override
-	public void init(Scope config) {
-		cfg = RabbitMqConfig.createFromScope(config);
-	}
+    @Override
+    public void init(Scope config) {
+        cfg = RabbitMqConfig.createFromScope(config);
+    }
 
-	@Override
-	public void postInit(KeycloakSessionFactory factory) {
+    @Override
+    public void postInit(KeycloakSessionFactory factory) {
 
-	}
+    }
 
-	@Override
-	public void close() {
+    @Override
+    public void close() {
 
-	}
+    }
 
-	@Override
-	public String getId() {
-		return "keycloak-to-rabbitmq";
-	}
+    @Override
+    public String getId() {
+        return "keycloak-to-rabbitmq";
+    }
 
 }
