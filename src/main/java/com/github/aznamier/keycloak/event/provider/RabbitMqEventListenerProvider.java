@@ -1,11 +1,8 @@
 package com.github.aznamier.keycloak.event.provider;
 
-import com.rabbitmq.client.AMQP;
+import com.rabbitmq.client.*;
 import com.rabbitmq.client.AMQP.BasicProperties;
 import com.rabbitmq.client.AMQP.BasicProperties.Builder;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
 import org.jboss.logging.Logger;
 import org.keycloak.events.Event;
 import org.keycloak.events.EventListenerProvider;
@@ -135,7 +132,9 @@ public class RabbitMqEventListenerProvider implements EventListenerProvider {
             Channel channel = conn.createChannel();
 
             // declaration and binding are not required programmatically
-            channel.queueDeclare(cfg.getQueueName(), false, false, false, null);
+            channel.exchangeDeclare(cfg.getExchange(), BuiltinExchangeType.TOPIC);
+            boolean durable = true; // the queue will survive a broker restart
+            channel.queueDeclare(cfg.getQueueName(), durable, false, false, null);
             channel.queueBind(cfg.getQueueName(), cfg.getExchange(), routingKey);
 
             channel.basicPublish(cfg.getExchange(), routingKey, props, messageString.getBytes(StandardCharsets.UTF_8));
