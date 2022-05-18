@@ -10,6 +10,7 @@ import org.keycloak.events.EventListenerTransaction;
 import org.keycloak.events.admin.AdminEvent;
 import org.keycloak.models.KeycloakSession;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -137,11 +138,26 @@ public class RabbitMqEventListenerProvider implements EventListenerProvider {
             Channel channel = conn.createChannel();
 
             // declaration and binding are not required programmatically
-            channel.exchangeDeclare(cfg.getExchange(), BuiltinExchangeType.TOPIC);
-            boolean durable = true; // the queue will survive a broker restart
-            channel.queueDeclare(cfg.getQueueName(), durable, false, false, null);
-            channel.queueBind(cfg.getQueueName(), cfg.getExchange(), routingKey);
+            try {
+                channel.exchangeDeclarePassive(cfg.getExchange());
+            } catch (IOException e) {
+                log.infof("exchange (%s) not found!", cfg.getExchange());
+                boolean durable = true; // the exchange will survive a broker restart
+                if (!channel.isOpen()) channel = conn.createChannel();
+                channel.exchangeDeclare(cfg.getExchange(), BuiltinExchangeType.TOPIC, durable);
+                log.infof("exchange (%s) declared successfully.", cfg.getExchange());
+            }
+            try {
+                channel.queueDeclarePassive(cfg.getQueueName());
+            } catch (IOException e) {
+                log.infof("queue (%s) not found!", cfg.getQueueName());
+                boolean durable = true; // the queue will survive a broker restart
+                if (!channel.isOpen()) channel = conn.createChannel();
+                channel.queueDeclare(cfg.getQueueName(), durable, false, false, null);
+                log.infof("queue (%s) declared successfully.", cfg.getQueueName());
+            }
 
+            channel.queueBind(cfg.getQueueName(), cfg.getExchange(), routingKey);
             channel.basicPublish(cfg.getExchange(), routingKey, props, messageString.getBytes(StandardCharsets.UTF_8));
 
             log.infof("keycloak-to-rabbitmq SUCCESS sending message: %s%n", routingKey);
