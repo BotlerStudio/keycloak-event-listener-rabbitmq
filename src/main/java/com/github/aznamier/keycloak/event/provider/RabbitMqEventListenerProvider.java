@@ -11,10 +11,7 @@ import org.keycloak.events.admin.AdminEvent;
 import org.keycloak.models.KeycloakSession;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class RabbitMqEventListenerProvider implements EventListenerProvider {
@@ -56,26 +53,30 @@ public class RabbitMqEventListenerProvider implements EventListenerProvider {
 
     @Override
     public void onEvent(Event event) {
-        if (filterClientEvent(event))
+        if (filterClientEvent(event)) {
+            log.info("Event filtered: " + event.getType());
             return;
+        }
         tx.addEvent(event);
     }
 
     @Override
     public void onEvent(AdminEvent adminEvent, boolean includeRepresentation) {
-        if (filterAdminEvent(adminEvent))
+        if (filterAdminEvent(adminEvent)) {
+            log.info("Admin event filtered: " + adminEvent.getOperationType());
             return;
+        }
         tx.addAdminEvent(adminEvent, includeRepresentation);
     }
 
     private boolean filterClientEvent(Event event) {
-        return filterEvent(event.getType().toString().toUpperCase(),
+        return filterEvent(event.getType().toString().toUpperCase(Locale.ENGLISH),
                 cfg.getAllowedClientEvents(),
                 cfg.getIgnoredClientEvents());
     }
 
     private boolean filterAdminEvent(AdminEvent adminEvent) {
-        return filterEvent(adminEvent.getOperationType().toString().toUpperCase(),
+        return filterEvent(adminEvent.getOperationType().toString().toUpperCase(Locale.ENGLISH),
                 cfg.getAllowedAdminEvents(),
                 cfg.getIgnoredAdminEvents());
     }
@@ -92,7 +93,11 @@ public class RabbitMqEventListenerProvider implements EventListenerProvider {
     }
 
     private Set<String> parseFilter(String eventFilter) {
-        return Arrays.stream(eventFilter.trim().toUpperCase().split(",")).collect(Collectors.toSet());
+        eventFilter = eventFilter.replace(" ", "");
+        if (eventFilter.isEmpty()) {
+            return new HashSet<>();
+        }
+        return Arrays.stream(eventFilter.toUpperCase(Locale.ENGLISH).split(",")).collect(Collectors.toSet());
     }
 
     private void publishEvent(Event event) {
