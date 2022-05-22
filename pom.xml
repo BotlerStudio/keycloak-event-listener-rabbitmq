@@ -5,7 +5,7 @@
     <groupId>com.github.waslabrowser.keycloak.event.provider</groupId>
     <artifactId>keycloak-to-rabbit-wasla</artifactId>
     <packaging>jar</packaging>
-    <version>3.1</version>
+    <version>3.2</version>
 
 
     <name>Keycloak: Event Publisher to RabbitMQ</name>

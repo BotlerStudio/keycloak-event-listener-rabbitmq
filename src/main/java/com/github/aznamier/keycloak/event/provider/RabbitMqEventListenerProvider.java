@@ -123,9 +123,11 @@ public class RabbitMqEventListenerProvider implements EventListenerProvider {
         Map<String, Object> headers = new HashMap<>();
         headers.put("__TypeId__", className);
 
+        int DELIVERY_MODE_PERSISTENT = 2;
         Builder propsBuilder = new AMQP.BasicProperties.Builder()
                 .appId("Keycloak")
                 .headers(headers)
+                .deliveryMode(DELIVERY_MODE_PERSISTENT)
                 .contentType("application/json")
                 .contentEncoding("UTF-8");
         return propsBuilder.build();
