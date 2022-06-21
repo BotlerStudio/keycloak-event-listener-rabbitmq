@@ -162,12 +162,12 @@ public class RabbitMqEventListenerProvider implements EventListenerProvider {
             channel.queueBind(cfg.getQueueName(), cfg.getExchange(), routingKey);
             channel.basicPublish(cfg.getExchange(), routingKey, props, messageString.getBytes(StandardCharsets.UTF_8));
 
-            log.infof("keycloak-to-rabbitmq SUCCESS sending message: %s%n", routingKey);
+            log.infof("keycloak-to-rabbitmq SUCCESS sending message: %s%n%s%n", routingKey, messageString);
 
             channel.close();
             conn.close();
         } catch (Exception ex) {
-            log.errorf(ex, "keycloak-to-rabbitmq ERROR sending message: %s%n", routingKey);
+            log.errorf(ex, "keycloak-to-rabbitmq ERROR sending message: %s%n%s%n", routingKey, messageString);
         }
     }
 }
