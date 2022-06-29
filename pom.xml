@@ -62,6 +62,13 @@
             <version>5.14.2</version>
         </dependency>
 
+        <!-- Segment analytics SDK -->
+        <dependency>
+            <groupId>com.segment.analytics.java</groupId>
+            <artifactId>analytics</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
