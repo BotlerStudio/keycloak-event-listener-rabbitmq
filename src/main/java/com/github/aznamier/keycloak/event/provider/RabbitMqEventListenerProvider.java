@@ -1,5 +1,6 @@
 package com.github.aznamier.keycloak.event.provider;
 
+import com.github.aznamier.analytics.SegmentConsumer;
 import com.rabbitmq.client.*;
 import com.rabbitmq.client.AMQP.BasicProperties;
 import com.rabbitmq.client.AMQP.BasicProperties.Builder;
@@ -15,7 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class RabbitMqEventListenerProvider implements EventListenerProvider {
+public class RabbitMqEventListenerProvider extends SegmentConsumer implements EventListenerProvider {
 
     private static final Logger log = Logger.getLogger(RabbitMqEventListenerProvider.class);
 
@@ -54,6 +55,12 @@ public class RabbitMqEventListenerProvider implements EventListenerProvider {
 
     @Override
     public void onEvent(Event event) {
+        try {
+            this.onEvent(event.getType().toString(), event);
+        } catch (Throwable t) {
+            log.errorf(t, "failed to send event %s to Segment!", event.getType());
+        }
+
         if (filterClientEvent(event)) {
             log.info("Event filtered: " + event.getType());
             return;
@@ -63,6 +70,12 @@ public class RabbitMqEventListenerProvider implements EventListenerProvider {
 
     @Override
     public void onEvent(AdminEvent adminEvent, boolean includeRepresentation) {
+        try {
+            this.onEvent(adminEvent.getOperationType().toString(), adminEvent);
+        } catch (Throwable t) {
+            log.errorf(t, "failed to send admin event %s to Segment!", adminEvent.getOperationType());
+        }
+
         if (filterAdminEvent(adminEvent)) {
             log.info("Admin event filtered: " + adminEvent.getOperationType());
             return;
