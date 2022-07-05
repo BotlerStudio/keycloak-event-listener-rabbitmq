@@ -68,11 +68,6 @@ therefore its easy for Rabbit client to subscribe to selective combinations eg:
 - `KK_TO_RMQ_USERNAME` - default: *guest*
 - `KK_TO_RMQ_PASSWORD` - default: *guest*
 - `KK_TO_RMQ_USE_TLS` - default: *false*
-- `KK_TO_RMQ_QNAME` - default: *kk*
-- `KK_TO_RMQ_ALLOWED_ADMIN_EVENTS` - default: *EMPTY* - *Comma-separated*
-- `KK_TO_RMQ_IGNORED_ADMIN_EVENTS` - default: *EMPTY* - *Comma-separated*
-- `KK_TO_RMQ_ALLOWED_CLIENT_EVENTS` - default: *EMPTY* - *Comma-separated*
-- `KK_TO_RMQ_IGNORED_CLIENT_EVENTS` - default: *EMPTY* - *Comma-separated*
 
 ###### OPTION 2: edit Keycloak subsystem of WildFly standalone.xml or standalone-ha.xml:
 
@@ -88,11 +83,6 @@ therefore its easy for Rabbit client to subscribe to selective combinations eg:
             <property name="use_tls" value="${env.KK_TO_RMQ_USE_TLS:false}"/>
             <property name="username" value="${env.KK_TO_RMQ_USERNAME:guest}"/>
             <property name="password" value="${env.KK_TO_RMQ_PASSWORD:guest}"/>
-            <property name="qname" value="${env.KK_TO_RMQ_PASSWORD:guest}"/>
-            <property name="allowed_admin_events" value="${env.KK_TO_RMQ_ALLOWED_ADMIN_EVENTS:}"/>
-            <property name="ignored_admin_events" value="${env.KK_TO_RMQ_IGNORED_ADMIN_EVENTS:}"/>
-            <property name="allowed_client_events" value="${env.KK_TO_RMQ_ALLOWED_CLIENT_EVENTS:}"/>
-            <property name="ignored_client_events" value="${env.KK_TO_RMQ_IGNORED_CLIENT_EVENTS:}"/>
         </properties>
     </provider>
 </spi>

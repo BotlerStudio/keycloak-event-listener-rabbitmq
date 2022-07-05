@@ -92,11 +92,6 @@ public class RabbitMqConfig {
         cfg.vhost = resolveConfigVar(config, "vhost", "/");
         cfg.useTls = Boolean.valueOf(resolveConfigVar(config, "use_tls", "false"));
         cfg.exchange = resolveConfigVar(config, "exchange", "amq.topic");
-        cfg.queueName = resolveConfigVar(config, "qname", "kk");
-        cfg.allowedAdminEvents = resolveConfigVar(config, "allowed_admin_events", "");
-        cfg.ignoredAdminEvents = resolveConfigVar(config, "ignored_admin_events", "");
-        cfg.allowedClientEvents = resolveConfigVar(config, "allowed_client_events", "");
-        cfg.ignoredClientEvents = resolveConfigVar(config, "ignored_client_events", "");
 
         return cfg;
     }
