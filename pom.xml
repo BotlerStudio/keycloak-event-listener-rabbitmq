@@ -5,13 +5,13 @@
     <groupId>com.github.waslabrowser.keycloak.event.provider</groupId>
     <artifactId>keycloak-to-rabbit-wasla</artifactId>
     <packaging>jar</packaging>
-    <version>3.2</version>
+    <version>3.6</version>
 
 
     <name>Keycloak: Event Publisher to RabbitMQ</name>
     <properties>
-        <keycloak.version>18.0.0</keycloak.version>
-        <jar.finalName>${project.artifactId}</jar.finalName>
+    	<keycloak.version>18.0.0</keycloak.version>
+    	<jar.finalName>${project.artifactId}-${project.version}</jar.finalName>
     </properties>
 
     <distributionManagement>
