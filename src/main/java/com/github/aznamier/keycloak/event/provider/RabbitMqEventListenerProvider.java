@@ -67,7 +67,8 @@ public class RabbitMqEventListenerProvider implements EventListenerProvider {
         String routingKey = RabbitMqConfig.calculateRoutingKey(event);
         String messageString = RabbitMqConfig.writeAsJson(msg, true);
 
-        BasicProperties msgProps = RabbitMqEventListenerProvider.getMessageProps(EventClientNotificationMqMsg.class.getName());
+        BasicProperties msgProps = RabbitMqEventListenerProvider.getMessageProps(
+                EventClientNotificationMqMsg.class.getName(), event.getId());
         this.publishNotification(messageString, msgProps, routingKey);
     }
 
@@ -75,14 +76,16 @@ public class RabbitMqEventListenerProvider implements EventListenerProvider {
         EventAdminNotificationMqMsg msg = EventAdminNotificationMqMsg.create(adminEvent);
         String routingKey = RabbitMqConfig.calculateRoutingKey(adminEvent);
         String messageString = RabbitMqConfig.writeAsJson(msg, true);
-        BasicProperties msgProps = RabbitMqEventListenerProvider.getMessageProps(EventAdminNotificationMqMsg.class.getName());
+        BasicProperties msgProps = RabbitMqEventListenerProvider.getMessageProps(
+                EventAdminNotificationMqMsg.class.getName(), adminEvent.getId());
         this.publishNotification(messageString, msgProps, routingKey);
     }
 
-    private static BasicProperties getMessageProps(String className) {
+    private static BasicProperties getMessageProps(String className, String deduplicationHeader) {
 
         Map<String, Object> headers = new HashMap<>();
         headers.put("__TypeId__", className);
+        headers.put("x-deduplication-header", deduplicationHeader);
 
         int DELIVERY_MODE_PERSISTENT = 2;
         Builder propsBuilder = new AMQP.BasicProperties.Builder()
