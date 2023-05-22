@@ -1,11 +1,13 @@
 package com.github.aznamier.keycloak.event.provider;
 
+import com.google.auto.service.AutoService;
 import org.keycloak.Config.Scope;
 import org.keycloak.events.EventListenerProvider;
 import org.keycloak.events.EventListenerProviderFactory;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 
+@AutoService(EventListenerProviderFactory.class)
 public class RabbitMqEventListenerProviderFactory implements EventListenerProviderFactory {
 
     private RabbitMqConfig cfg;

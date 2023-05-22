@@ -1,7 +1,7 @@
 package com.github.aznamier.keycloak.event.provider;
 
 
-import org.jboss.logging.Logger;
+import lombok.extern.jbosslog.JBossLog;
 import org.keycloak.Config.Scope;
 import org.keycloak.events.Event;
 import org.keycloak.events.admin.AdminEvent;
@@ -10,10 +10,9 @@ import org.keycloak.util.JsonSerialization;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-
+@JBossLog
 public class RabbitMqConfig {
 
-    private static final Logger log = Logger.getLogger(RabbitMqConfig.class);
     public static final String ROUTING_KEY_PREFIX = "KK.EVENT";
     private static final Pattern SPECIAL_CHARACTERS = Pattern.compile("[^*#a-zA-Z0-9 _.-]");
     private static final Pattern SPACE = Pattern.compile(" ");

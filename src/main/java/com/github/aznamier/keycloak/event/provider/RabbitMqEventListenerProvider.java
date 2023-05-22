@@ -3,7 +3,7 @@ package com.github.aznamier.keycloak.event.provider;
 import com.rabbitmq.client.*;
 import com.rabbitmq.client.AMQP.BasicProperties;
 import com.rabbitmq.client.AMQP.BasicProperties.Builder;
-import org.jboss.logging.Logger;
+import lombok.extern.jbosslog.JBossLog;
 import org.keycloak.events.Event;
 import org.keycloak.events.EventListenerProvider;
 import org.keycloak.events.EventListenerTransaction;
@@ -15,10 +15,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+@JBossLog
 public class RabbitMqEventListenerProvider implements EventListenerProvider {
-
-    private static final Logger log = Logger.getLogger(RabbitMqEventListenerProvider.class);
-
     private final RabbitMqConfig cfg;
     private final ConnectionFactory factory;
 
